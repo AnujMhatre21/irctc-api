@@ -39,7 +39,8 @@ public class Train {
 
 	private List<List<String>> seats;
 
-	private List<String> allStations;
+	
+	private List<String> allstations;
 
 	public Train() {
 		super();
@@ -57,7 +58,7 @@ public class Train {
 		this.arrivalTime = arrivalTime;
 		this.travelTime = travelTime;
 		this.seats = seats;
-		this.allStations = allStations;
+		this.allstations = allStations;
 	}
 
 	public String getTrainName() {
@@ -125,11 +126,11 @@ public class Train {
 	}
 
 	public List<String> getAllStations() {
-		return allStations;
+		return allstations;
 	}
 
 	public void setAllStations(List<String> allStations) {
-		this.allStations = allStations;
+		this.allstations = allStations;
 	}
 
 }

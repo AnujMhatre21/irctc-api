@@ -38,8 +38,14 @@ public class User {
 	@Transient
 	private List<Ticket> ticketBooked;
 
+	@Column(name = "active")
+	private boolean active;
+
+	@Column(name = "role")
+	private String role;
+
 	public User(String userId, String username, String password, String confirmPassword, String hashPassword,
-			LocalDateTime dataTime, List<Ticket> ticketBooked) {
+			LocalDateTime dataTime, List<Ticket> ticketBooked, boolean active, String role) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -48,6 +54,24 @@ public class User {
 		this.hashPassword = hashPassword;
 		this.dataTime = dataTime;
 		this.ticketBooked = ticketBooked;
+		this.active = active;
+		this.role = role;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public User() {
