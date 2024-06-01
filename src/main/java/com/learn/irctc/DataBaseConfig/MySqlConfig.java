@@ -26,29 +26,31 @@ import jakarta.persistence.PersistenceUnit;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.learn.irctc.Repo","com.learn.irctc.entities"}, entityManagerFactoryRef = "mysqlEntityManager", transactionManagerRef = "mysqlTransactionManager")
+@EnableJpaRepositories(basePackages = { "com.learn.irctc.Repo",
+		"com.learn.irctc.entities" }, entityManagerFactoryRef = "mysqlEntityManagerFactoryFipData", transactionManagerRef = "mysqlTransactionManager")
 public class MySqlConfig extends HikariConfig {
 
 	@Autowired
 	private Environment environment;
 
 	@Primary
-	@Bean(name = "mysqlDataSource")
+	@Bean(name = "mysqlDataSourceFipData")
 	@ConfigurationProperties(prefix = "spring.datasource.mysql")
-	public DataSource mysqlDataSource() {
+	public DataSource mysqlDataSourceFipData() {
 		return new HikariDataSource();
 	}
 
 	@Primary
-	@Bean(name = "mysqlEntityFactory")
+	@Bean(name = "mysqlEntityManagerFactoryFipData")
 	@PersistenceUnit(unitName = "mysqlData")
-	public LocalContainerEntityManagerFactoryBean mysqlEntityFactory(EntityManagerFactoryBuilder builder, 
-    @Qualifier("mysqlDataSource") DataSource dataSource) {
-		LocalContainerEntityManagerFactoryBean em = builder.dataSource(dataSource).packages("com.learn.irctc.entities").persistenceUnit("mysqlData").build();
-		
+	public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactoryFipData(EntityManagerFactoryBuilder builder,
+			@Qualifier("mysqlDataSourceFipData") DataSource dataSource) {
+		LocalContainerEntityManagerFactoryBean em = builder.dataSource(dataSource).packages("com.learn.irctc.entities")
+				.persistenceUnit("mysqlData").build();
+
 		HashMap<String, Object> properties = new HashMap<>();
 		properties.put("spring.jpa.show-sql", environment.getProperty("spring.datasource.mysql.jpa.show-sql"));
-		properties.put("spring.jpa.hibernate.ddl-auto", environment.getProperty("spring.datasource.mysql.jpa.hibernate.ddl-auto"));
+		properties.put("hibernate.hbm2ddl-auto", environment.getProperty("spring.datasource.mysql.jpa.hibernate.ddl-auto"));
 		em.setJpaPropertyMap(properties);
 		return em;
 	}
@@ -56,9 +58,8 @@ public class MySqlConfig extends HikariConfig {
 	@Primary
 	@Bean(name = "mysqlTransactionManager")
 	public PlatformTransactionManager mysqlTransactionManager(
-			@Qualifier("mysqlEntityFactory") EntityManagerFactory mysqlEntityFactory) {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(mysqlEntityFactory);
-		return jpaTransactionManager;
+			@Qualifier("mysqlEntityManagerFactoryFipData") EntityManagerFactory mysqlEntityManagerFactoryFipData) {
+		return new JpaTransactionManager(mysqlEntityManagerFactoryFipData);
 	}
 
 }
